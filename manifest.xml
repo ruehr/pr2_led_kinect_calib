@@ -1,0 +1,21 @@
+<package>
+  <description brief="pr2_led_kinect_calib">
+
+     pr2_led_kinect_calib
+
+  </description>
+  <author>Thomas Ruehr</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/pr2_led_kinect_calib</url>
+  <depend package="tf"/>
+  <depend package="roscpp"/>
+  <depend package="ethercat_trigger_controllers"/>
+  <depend package="pcl_ros"/>
+  <depend package="sensor_msgs"/>
+  <depend package="arm_navigation_msgs"/>
+  <depend package="pr2_controllers_msgs"/>
+
+</package>
+
+
