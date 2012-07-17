@@ -272,6 +272,7 @@ int main(int argc,char **argv)
     {
         angle += 37.0 / 180.0 * M_PI;
         double radius = .2;
+        std::cout << "Sent head pointing command, waiting for head to settle ..";
         lookAt(led_frame_.c_str(), radius * sin(angle), radius * cos(angle),0);
         //std::cout << angle << " " << radius * sin(angle) << " " <<  radius * cos(angle) << std::endl;
 
@@ -284,6 +285,8 @@ int main(int argc,char **argv)
         double position_change = 5;
         size_t num_settled = 0;
         // wait for head vs hand tf to settle as the head should not move during calib
+
+        std::cout.flush();
         while  (num_settled < 3) {
             rt.sleep();
             last_hand_pose = hand_pose;
@@ -296,6 +299,7 @@ int main(int argc,char **argv)
             else
                 num_settled = 0;
         }
+        std::cout <<"..done." << std::endl;
 
         tf::Vector3 led_tf, led_kinect;
         find_correspondance(led_kinect, led_tf);
@@ -342,6 +346,7 @@ int main(int argc,char **argv)
             tf::Matrix3x3(post.getRotation()).getRPY(roll, pitch, yaw);
             std::cout << "RPY " << roll << " " << pitch << " " << yaw <<  std::endl;
 
+            std::cout << "<origin rpy=\"" << roll << " " << pitch << " " << yaw << "\" xyz=" << ps_post.translation.x << " " << ps_post.translation.y << " " << ps_post.translation.z << "\"/> " << std::endl;
             //geometry_msgs::Transform ps_pre;
             //tf::transformTFToMsg(pre,ps_pre);
             //std::cout << "kinect pose pre " << ps_pre << std::endl;
