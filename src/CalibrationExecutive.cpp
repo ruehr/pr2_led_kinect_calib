@@ -151,6 +151,8 @@ std::vector<double> field;
 tf::Vector3 locate_led()
 {
 
+    std::cout << "Locating LED in Kinect Pointcloud :";
+
     pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud (new pcl::PointCloud<pcl::PointXYZRGB>);
     pcl::PointCloud<pcl::PointXYZRGB>::Ptr last_cloud (new pcl::PointCloud<pcl::PointXYZRGB>);
 
@@ -164,11 +166,14 @@ tf::Vector3 locate_led()
 
     tf::Vector3 best_pt;
 
-    double field_avg = 0;
+    double field_avg = 1;
+
+    size_t num_pics = 0;
 
     // trigger a few times until we have enough evidence we found the led
     while (ros::ok() && ((field_max<2500) || (field_max < fabs(field_avg) * 100)))
     {
+
         if (waveform.request.active_low)
             waveform.request.active_low = 0;
         else
@@ -188,6 +193,8 @@ tf::Vector3 locate_led()
 
         getCloud(cloud, rgb_optical_frame_, ros::Time::now(), &lookup_time);
 
+        num_pics++;
+
         size_t max_index = 0;
         field_avg = 0;
 
@@ -206,15 +213,33 @@ tf::Vector3 locate_led()
             field_avg /= cloud->points.size();
             tf::Vector3 max_pt(cloud->points[max_index].x, cloud->points[max_index].y, cloud->points[max_index].z);
             best_pt = max_pt;
-            std::cout << "max pt idx" << max_index << " (" << field_max << "):" << "field abs avg " << field_avg << std::endl;
+            //std::cout << "max pt idx" << max_index << " (" << field_max << "):" << "field abs avg " << field_avg << std::endl;
             //max_pt.x() << " " << max_pt.y() << " " << max_pt.z() << std::endl;
             //std::cout << "field avg " << field_avg << std::endl;
         } else {
             have_last_cloud = true;
         }
 
+        if (field_avg > 0)
+            std::cout << ".." << std::min((double)100.0,std::min(100.0 * field_max / 2500 , 100.0 * field_max / (fabs(field_avg) * 100))) << "%";
+
+        std::cout.flush();
+
+        if (num_pics > 20)
+        {
+            ROS_WARN("It takes unusually long to detect the LED in the kinect frame.");
+            ROS_WARN("Make sure the right gripper LED is blinking and visible by the kinect - did you start the led controller? Try to keep the background static. Check for possible specular reflections in the kinect rgb image and get rid of them (ceiling lamps etc).");
+        }
+
+        if (num_pics > 50) {
+            ROS_WARN("Starting over");
+            return locate_led();
+        }
+
         //rt.sleep();
     }
+
+    std::cout << std::endl;
     return best_pt;
 }
 
