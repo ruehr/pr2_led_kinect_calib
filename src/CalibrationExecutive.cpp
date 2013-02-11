@@ -371,7 +371,7 @@ int main(int argc,char **argv)
             tf::Matrix3x3(post.getRotation()).getRPY(roll, pitch, yaw);
             std::cout << "RPY " << roll << " " << pitch << " " << yaw <<  std::endl;
 
-            std::cout << "<origin rpy=\"" << roll << " " << pitch << " " << yaw << "\" xyz=" << ps_post.translation.x << " " << ps_post.translation.y << " " << ps_post.translation.z << "\"/> " << std::endl;
+            std::cout << "<origin rpy=\"" << roll << " " << pitch << " " << yaw << "\" xyz=\"" << ps_post.translation.x << " " << ps_post.translation.y << " " << ps_post.translation.z << "\"/> " << std::endl;
             //geometry_msgs::Transform ps_pre;
             //tf::transformTFToMsg(pre,ps_pre);
             //std::cout << "kinect pose pre " << ps_pre << std::endl;
