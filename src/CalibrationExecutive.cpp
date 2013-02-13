@@ -348,7 +348,7 @@ int main(int argc,char **argv)
             Eigen::Matrix4d md(trans.cast<double>());
             Eigen::Affine3d affine(md);
             tf::Transform transform;
-            tf::TransformEigenToTF(affine, transform);
+            tf::transformEigenToTF(affine, transform);
 
             geometry_msgs::Transform ps;
             tf::transformTFToMsg(transform,ps);
@@ -366,7 +366,7 @@ int main(int argc,char **argv)
             tf::transformTFToMsg(post,ps_post);
             std::cout << "New pose of " <<  rgb_optical_frame_  << " in " << mount_frame_ << " \n " << ps_post << std::endl;
 
-            btQuaternion q;
+            tf::Quaternion q;
             double roll, pitch, yaw;
             tf::Matrix3x3(post.getRotation()).getRPY(roll, pitch, yaw);
             std::cout << "RPY " << roll << " " << pitch << " " << yaw <<  std::endl;
