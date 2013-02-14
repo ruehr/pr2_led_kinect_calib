@@ -353,7 +353,7 @@ int main(int argc,char **argv)
             Eigen::Matrix4d md(trans.cast<double>());
             Eigen::Affine3d affine(md);
             tf::Transform transform;
-            tf::TransformEigenToTF(affine, transform);
+            tf::transformEigenToTF(affine, transform);
 
             geometry_msgs::Transform ps;
             tf::transformTFToMsg(transform,ps);
