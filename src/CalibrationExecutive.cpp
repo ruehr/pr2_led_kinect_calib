@@ -15,6 +15,11 @@
 
 #include <pcl/registration/transformation_estimation_svd.h>
 
+// ugly test depending on roscpp because tf_conversions is not properly versionized
+#if !ROS_VERSION_MINIMUM(1, 9, 30)
+         #define transformTFToEigen TransformTFToEigen
+         #define transformEigenToTF TransformEigenToTF
+#endif // !ROS_VERSION_MINIMUM(1, 9, 30)
 
 std::string mount_frame_ = "head_mount_link";
 std::string rgb_optical_frame_ = "head_mount_kinect_ir_link";
@@ -361,7 +366,7 @@ int main(int argc,char **argv)
             //std::cout << "kinect pose " << ps_kinect << std::endl;
 
             tf::Transform post = kinect_trans * transform;
-            tf::Transform pre = transform * kinect_trans;
+
             geometry_msgs::Transform ps_post;
             tf::transformTFToMsg(post,ps_post);
             std::cout << "New pose of " <<  rgb_optical_frame_  << " in " << mount_frame_ << " \n " << ps_post << std::endl;
@@ -372,11 +377,6 @@ int main(int argc,char **argv)
             std::cout << "RPY " << roll << " " << pitch << " " << yaw <<  std::endl;
 
             std::cout << "<origin rpy=\"" << roll << " " << pitch << " " << yaw << "\" xyz=\"" << ps_post.translation.x << " " << ps_post.translation.y << " " << ps_post.translation.z << "\"/> " << std::endl;
-            //geometry_msgs::Transform ps_pre;
-            //tf::transformTFToMsg(pre,ps_pre);
-            //std::cout << "kinect pose pre " << ps_pre << std::endl;
-
-            //std::cout << trans << std::endl;
         }
     }
 
